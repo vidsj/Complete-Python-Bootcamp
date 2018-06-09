@@ -1,0 +1,94 @@
+import random
+from IPython.display import clear_output
+
+def print_board(board):
+    clear_output()
+    print(board[6] + '|'+ board[7] +'|'+ board[8])
+    print('_'+' '+ '_' +' '+ '_')
+    print(board[3] + '|'+ board[4] +'|'+ board[5])
+    print('_'+' '+ '_' +' '+ '_')
+    print(board[0] + '|'+ board[1] +'|'+ board[2])
+    
+    
+def playerinput(player):
+    marker = raw_input(player + ' ' + "Enter X or O:")
+    if marker == 'X':
+        return ('X', 'O')
+    elif marker == 'O':
+        return ('O', 'X')
+
+
+def marker_position(player, marker):
+    position = raw_input(player + ' ' + "Enter marker position:")
+    return (player, marker, int(position))
+
+def insert_in_board(player, marker, position, board): 
+    board[position] = marker.upper()
+
+    
+def win_loose(player, marker, board):
+    if ((board[0] == marker and board[1] == marker and board[2] == marker) 
+        or (board[3] == marker and board[4] == marker and board[5] == marker) 
+        or (board[6] == marker and board[7] == marker and board[8] == marker) 
+        or  (board[0] == marker and board[4] == marker and board[8] == marker) 
+        or (board[3] == marker and board[5] == marker and board[6] == marker) 
+        or (board[0] == marker and board[3] == marker and board[6] == marker) 
+        or (board[1] == marker and board[4] == marker and board[7] == marker) 
+        or (board[2] == marker and board[5] == marker and board[8] == marker)):
+        return True
+
+def board_full(board):
+    count = 1
+    for i in range(8):
+        if board[i] in ('X', 'O'):
+            count = count + 1
+    if count == len(board):
+        return True
+
+def replay():
+    choice = raw_input("Do  you want to continue to play? yes or no:")
+    return choice
+
+def choose_first():
+    flip = random.randint(0,1)
+    if flip == 0:
+        return 'player1'
+    else:
+        return 'player2'
+    
+        #########################
+        
+        
+
+board = [' '] * 9
+marker = ''
+player = choose_first()
+player1_marker, player2_marker = playerinput(player)
+
+while True:
+    if player == 'player1':
+        player, marker, pos = marker_position(player, player1_marker)    
+    elif player == 'player2':
+        player, marker, pos = marker_position(player, player2_marker)
+    
+    insert_in_board(player, marker, pos, board)
+    print_board(board)
+    
+    
+    if board_full(board):
+        print ("game over, it's a tie!")
+        replay = replay()
+        
+    if win_loose(player, marker, board):
+        print (player + ' ' + 'has won the game')
+        replay = replay()
+        
+    if player == 'player1':
+        player = 'player2'
+    
+    elif player == 'player2':
+        player = 'player1'
+
+    
+    if replay == 'no':
+        break;
